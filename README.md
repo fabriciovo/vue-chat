@@ -6,7 +6,7 @@ Web chat made in VueJS
 ## Features
 * User profile
 * Send messages and audios
-* Chat with your friends :sunglasses::
+* Chat with your friends :sunglasses:
 
 ## Built With
 * Vue 2
