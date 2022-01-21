@@ -11,13 +11,13 @@ Vue.use(firestorePlugin)
 Vue.config.productionTip = false
 
 import Home from './components/Home'
-import ChatRoom from './components/ChatRoom'
+import vuetify from './plugins/vuetify'
 
 
 const router = new VueRouter({
   routes: [
     { path: '/', component: Home },
-    { path: '/chats/:id', component:ChatRoom, name: 'chat'},
+    { path: '/chats/:id', component:Home, name: 'chat'},
 
   ]
 })
@@ -25,5 +25,6 @@ const router = new VueRouter({
 
 new Vue({
   router,
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')
