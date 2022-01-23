@@ -6,6 +6,7 @@
     <code>https://your-url.com/#/chats/{{ chatId }}</code>
 
     <main class="section">
+      
       <User #user="{ user }">
         <div v-if="user">
           <v-card v-scroll.self="onScroll" class="overflow-y-auto chat">

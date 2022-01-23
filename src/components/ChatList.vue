@@ -9,7 +9,7 @@
     <v-card-actions>
       <ul>
         <li v-for="chat of chats" :key="chat.id">
-          <router-link :to="{ name: 'chat', params: { id: chat.id } }">
+          <router-link :to="{ name: 'chatId', params: { id: chat.id } }" :key="$route.fullPath">
             {{ chat.id }}
           </router-link>
         </li>

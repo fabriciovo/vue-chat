@@ -28,7 +28,15 @@
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                  <v-list-item-title>Chats</v-list-item-title>
+                  <v-list-item-title>
+                    <router-link
+                      :to="{ name: 'chat'}"
+                      :key="$route.fullPath"
+                      :user="{user}"
+                    >
+                      Chats
+                    </router-link></v-list-item-title
+                  >
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
@@ -37,7 +45,13 @@
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                  <v-list-item-title>Profile</v-list-item-title>
+                  <v-list-item-title
+                    ><router-link
+                      :to="{ name: 'profile', params: { id: user.uid } }"
+                    >
+                      Profile
+                    </router-link>
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
@@ -56,13 +70,11 @@
             </v-list>
           </v-navigation-drawer>
           <v-container style="margin-left: 13%">
-            <v-row no-gutters>
-              <v-col md="3"><ChatList :uid="user.uid" /> </v-col>
-              <v-col cols="12" sm="6" md="8"><ChatRoom :user="user" /> </v-col>
-            </v-row>
+            <router-view :user="{ user }"></router-view>
           </v-container>
         </div>
       </div>
+
       <Login v-else />
     </User>
   </div>
@@ -71,11 +83,10 @@
 <script>
 import Login from "./Login.vue";
 import User from "./User.vue";
-import ChatList from "./ChatList.vue";
-import ChatRoom from "./ChatRoom.vue";
+
 import { auth } from "../firebase";
 export default {
-  components: { Login, User, ChatList, ChatRoom },
+  components: { Login, User },
   data() {
     return {
       auth,

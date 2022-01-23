@@ -10,15 +10,18 @@ Vue.use(VueRouter)
 Vue.use(firestorePlugin)
 Vue.config.productionTip = false
 
-import Home from './components/Home'
+import Chats from './components/Chats'
+import Profile from './components/Profile'
+
 import vuetify from './plugins/vuetify'
 
 
 const router = new VueRouter({
   routes: [
-    { path: '/', component: Home },
-    { path: '/chats/:id', component:Home, name: 'chat'},
-
+    { path: '/', component: Chats },
+    { path: '/chats', component:Chats, name: 'chat'},
+    { path: '/chats/:id', component:Chats, name: 'chatId'},
+    { path: '/profile/:id', component:Profile, name:'profile'},
   ]
 })
 
