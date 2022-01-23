@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="300">
+  <v-card  v-scroll.self="onScroll" class="overflow-y-auto chat-list">
     <v-card-title> Chat List </v-card-title>
     <v-card-subtitle>
       <button @click="createChatRoom()" class="button">
@@ -45,4 +45,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.chat-list {
+  height: 600px;
+  max-height: 600px;
+  margin-right: 10px ;
+}
+
+</style>
