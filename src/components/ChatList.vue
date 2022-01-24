@@ -1,5 +1,7 @@
 <template>
-  <v-card  v-scroll.self="onScroll" class="overflow-y-auto chat-list">
+  <v-card  class="overflow-y-auto chat-list">
+
+    apsfodopkpoas<br>{{uid}}
     <v-card-title> Chat List </v-card-title>
     <v-card-subtitle>
       <button @click="createChatRoom()" class="button">

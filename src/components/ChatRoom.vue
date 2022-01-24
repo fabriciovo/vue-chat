@@ -6,37 +6,41 @@
     <code>https://your-url.com/#/chats/{{ chatId }}</code>
 
     <main class="section">
-      <User #user="{ user }">
-        <div v-if="user">
-          <v-card v-scroll.self="onScroll" class="overflow-y-auto chat">
-            <ul>
-              <li v-for="message of messages" :key="message.id">
-                <ChatMessage
-                  :message="message"
-                  :owner="user.uid === message.sender"
-                />
-              </li>
-            </ul>
-          </v-card>
-          <hr />
-          <audio v-if="newAudio" :src="newAudioURL" controls></audio>
+      <User>
+        <template #user="{ user }">
+          <div v-if="user">
+            <v-card class="overflow-y-auto chat">
+              <ul>
+                <li v-for="message of messages" :key="message.id">
+                  <ChatMessage
+                    :message="message"
+                    :owner="user.uid === message.sender"
+                  />
+                </li>
+              </ul>
+            </v-card>
+            <hr />
+            <audio v-if="newAudio" :src="newAudioURL" controls></audio>
 
-          <input v-model="newMessageText" class="input" />
+            <input v-model="newMessageText" class="input" />
 
-          <button
-            :disabled="(!newMessageText && !newAudio) || loading"
-            class="button is-success"
-            type="text"
-            @click="addMessage(user.uid)"
-          >
-            Send
-          </button>
-          <button v-if="!recorder" @click="record()" class="button is-info">
-            Record Voice
-          </button>
-          <button v-else @click="stop()" class="button is-danger">Stop</button>
-        </div>
-        <Login v-else />
+            <button
+              :disabled="(!newMessageText && !newAudio) || loading"
+              class="button is-success"
+              type="text"
+              @click="addMessage(user.uid)"
+            >
+              Send
+            </button>
+            <button v-if="!recorder" @click="record()" class="button is-info">
+              Record Voice
+            </button>
+            <button v-else @click="stop()" class="button is-danger">
+              Stop
+            </button>
+          </div>
+          <Login v-else />
+        </template>
       </User>
     </main>
   </div>
