@@ -1,28 +1,85 @@
 <template>
-  <v-card class="mx-auto" max-width="344">
-    <v-img
-      class="avatar"
-      src="https://www.w3schools.com/howto/img_avatar.png"
-      height="200px"
-      alt="Avatar"
-    ></v-img>
+  <div>
+    <User #user="{ user }">
+      <v-row justify="center">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">User Profile</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      label="Username"
+                      hint="Display Name"
+                      v-model="displayName"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false">
+                Close
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="updateUserData()">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+      <v-card class="mx-auto" max-width="344">
+        <v-img
+          class="avatar"
+          src="https://www.w3schools.com/howto/img_avatar.png"
+          height="200px"
+          alt="Avatar"
+        ></v-img>
 
-    <v-card-title> Username </v-card-title>
+        <v-card-title> </v-card-title>
 
-    <v-card-subtitle> Description </v-card-subtitle>
+        <v-card-subtitle> {{ user.email }} </v-card-subtitle>
 
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="orange lighten-2" text> Edit </v-btn>
-    </v-card-actions>
-  </v-card>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="orange lighten-2" text @click="dialog = true">
+            Edit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </User>
+  </div>
 </template>
 
 <script>
-export default {};
+import { auth, db } from "../firebase";
+import User from "./User.vue";
+
+export default {
+  components: { User },
+  data() {
+    console.log(this.user);
+    return {
+      auth,
+      displayName: "",
+      dialog: false,
+    };
+  },
+  methods: {
+    async updateUserData() {
+      console.log("pofkaspoka");
+      db.collection("users").doc(this.user.uid).set({
+        displayName: this.displayName,
+      });
+      this.dialog = false;
+    },
+  },
+  props: ["user"],
+};
 </script>
 
-<style>
-.avatar {
-}
-</style>
+<style></style>

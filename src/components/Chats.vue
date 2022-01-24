@@ -10,9 +10,9 @@
 <script>
 import ChatList from "./ChatList.vue";
 import ChatRoom from "./ChatRoom.vue";
-import User from "./User.vue";
 export default {
-  components: { ChatList, ChatRoom, User },
+  components: { ChatList, ChatRoom },
+  props: ["user"],
 };
 </script>
 

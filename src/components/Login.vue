@@ -33,11 +33,12 @@
 
 <script>
 import { auth } from "../firebase";
-
+import { db } from "../firebase";
 export default {
   data() {
     return {
       auth,
+      db,
       newUser: false,
       email: "",
       password: "",
@@ -50,15 +51,21 @@ export default {
       this.loading = true;
       this.errorMessage = "";
 
-      try {
-        if (this.newUser) {
-          await auth.createUserWithEmailAndPassword(this.email, this.password);
-        } else {
-          await auth.signInWithEmailAndPassword(this.email, this.password);
-        }
-      } catch (err) {
-        this.errorMessage = err.message;
+      if (this.newUser) {
+        auth
+          .createUserWithEmailAndPassword(this.email, this.password)
+          .then((cred) => {
+            return db.collection("users").doc(cred.user.uid).set({
+              email: this.email,
+            });
+          });
+      } else {
+        auth
+          .signInWithEmailAndPassword(this.email, this.password)
+          .then(() => {})
+          .catch((err) => console.error(err));
       }
+
       this.loading = false;
     },
   },

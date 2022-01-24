@@ -32,7 +32,6 @@
                     <router-link
                       :to="{ name: 'chat'}"
                       :key="$route.fullPath"
-                      :user="{user}"
                     >
                       Chats
                     </router-link></v-list-item-title
@@ -70,7 +69,7 @@
             </v-list>
           </v-navigation-drawer>
           <v-container style="margin-left: 13%">
-            <router-view :user="{ user }"></router-view>
+            <router-view></router-view>
           </v-container>
         </div>
       </div>
