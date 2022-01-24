@@ -33,12 +33,9 @@
 
 <script>
 import { auth } from "../firebase";
-import { db } from "../firebase";
 export default {
   data() {
     return {
-      auth,
-      db,
       newUser: false,
       email: "",
       password: "",
@@ -50,20 +47,26 @@ export default {
     async signInOrCreateUser() {
       this.loading = true;
       this.errorMessage = "";
-
       if (this.newUser) {
         auth
           .createUserWithEmailAndPassword(this.email, this.password)
-          .then((cred) => {
-            return db.collection("users").doc(cred.user.uid).set({
-              email: this.email,
-            });
+          .then((data) => {
+            data.user
+              .updateProfile({
+                displayName: "Username",
+                email: this.email,
+              })
+              .then(() => {});
+          })
+          .catch((err) => {
+            console.error(err);
           });
       } else {
         auth
           .signInWithEmailAndPassword(this.email, this.password)
           .then(() => {})
           .catch((err) => console.error(err));
+        console.log("user");
       }
 
       this.loading = false;

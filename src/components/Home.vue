@@ -88,9 +88,10 @@ import User from "./User.vue";
 
 import { auth } from "../firebase";
 export default {
+  
   components: { Login, User },
   data() {
-    return {
+     return {
       auth,
     };
   },

@@ -17,7 +17,8 @@
                           label="Username"
                           hint="Display Name"
                           v-model="displayName"
-                        ></v-text-field>
+                        >
+                        </v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -27,7 +28,11 @@
                   <v-btn color="blue darken-1" text @click="dialog = false">
                     Close
                   </v-btn>
-                  <v-btn color="blue darken-1" text @click="updateUserData()">
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="updateUserData(user)"
+                  >
                     Save
                   </v-btn>
                 </v-card-actions>
@@ -41,8 +46,7 @@
               height="200px"
               alt="Avatar"
             ></v-img>
-
-            <v-card-title> </v-card-title>
+            <v-card-title> {{ user.displayName }} </v-card-title>
 
             <v-card-subtitle> {{ user.email }} </v-card-subtitle>
 
@@ -60,25 +64,35 @@
 </template>
 
 <script>
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import User from "./User.vue";
 
 export default {
   components: { User },
   data() {
     return {
-      auth,
       displayName: "",
       dialog: false,
     };
   },
+
+  computed: {
+    userId() {
+      return this.$route.params.id;
+    },
+  },
+
   methods: {
     async updateUserData() {
-      console.log("pofkaspoka");
-      db.collection("users").doc(this.user.uid).set({
-        displayName: this.displayName,
-      });
-      this.dialog = false;
+      auth.currentUser
+        .updateProfile({
+          displayName: this.displayName,
+        })
+        .then((res) => {
+          console.log(res);
+          this.dialog = false;
+        })
+        .catch((err) => console.error(err));
     },
   },
   props: ["user"],
