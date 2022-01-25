@@ -20,6 +20,18 @@
                         >
                         </v-text-field>
                       </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-img :src="{ photoURL }" />
+                        <input
+                          type="file"
+                          style="display: none"
+                          accept="image/png, image/jpeg"
+                          id="photoURL"
+                          ref="file"
+                          @change="handleFileUpload($event)"
+                        />
+                        <button @click="submitFile()">open file dialog</button>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -42,7 +54,7 @@
           <v-card class="mx-auto" max-width="344">
             <v-img
               class="avatar"
-              src="https://www.w3schools.com/howto/img_avatar.png"
+              :src="photoURL"
               height="200px"
               alt="Avatar"
             ></v-img>
@@ -64,7 +76,7 @@
 </template>
 
 <script>
-import { auth } from "../firebase";
+import { auth, storage } from "../firebase";
 import User from "./User.vue";
 
 export default {
@@ -73,26 +85,57 @@ export default {
     return {
       displayName: "",
       dialog: false,
+      photoURL: "",
+      imageURL: null,
+      teste: null,
     };
   },
-
-  computed: {
-    userId() {
-      return this.$route.params.id;
-    },
+  created() {
+   this.photoURL = this.donwloadProfilePhoto();
   },
-
   methods: {
     async updateUserData() {
-      auth.currentUser
-        .updateProfile({
-          displayName: this.displayName,
-        })
+      storage
+        .ref(`users/${auth.currentUser.uid}/profile.jpg`)
+        .put(this.photoURL)
         .then((res) => {
-          console.log(res);
-          this.dialog = false;
+          auth.currentUser
+            .updateProfile({
+              displayName: this.displayName,
+              photoURL: res.fullpath,
+            })
+            .then((res) => {
+              console.log(res);
+              this.dialog = false;
+            })
+            .catch((err) => console.error(err));
         })
         .catch((err) => console.error(err));
+    },
+    handleFileUpload(event) {
+      const files = event.target.files;
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.photoURL = files[0];
+      console.log(this.photoURL);
+    },
+
+    async submitFile() {
+      this.$refs.file.click();
+    },
+    async donwloadProfilePhoto() {
+      if (auth.currentUser) {
+        storage
+          .ref(`users/${auth.currentUser.uid}/profile.jpg`)
+          .getDownloadURL()
+          .then((imgUrl) => {
+            this.photoURL = imgUrl;
+            console.log(imgUrl);
+          });
+      }
     },
   },
   props: ["user"],

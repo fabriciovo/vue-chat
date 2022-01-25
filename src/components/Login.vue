@@ -54,7 +54,7 @@ export default {
             data.user
               .updateProfile({
                 displayName: "Username",
-                email: this.email,
+                photoURL: "https://www.w3schools.com/howto/img_avatar.png",
               })
               .then(() => {});
           })
