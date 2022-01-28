@@ -50,16 +50,13 @@ export default {
       if (this.newUser) {
         auth
           .createUserWithEmailAndPassword(this.email, this.password)
-          .then((data) => {
-            data.user
+          .then(() => {
+            auth.currentUser
               .updateProfile({
                 displayName: "Username",
-                photoURL: "https://www.w3schools.com/howto/img_avatar.png",
+                photoURL: "https://www.w3schools.com/howto/img_avatar.png"
               })
-              .then(() => {});
-          })
-          .catch((err) => {
-            console.error(err);
+              .catch((error) => console.error(error));
           });
       } else {
         auth

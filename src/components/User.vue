@@ -10,6 +10,7 @@ import { auth } from "../firebase";
 export default {
   setup() {
     const user = ref(null);
+    console.log(user)
     const unsubscribe = auth.onAuthStateChanged(
       (firebaseUser) => (user.value = firebaseUser)
     );

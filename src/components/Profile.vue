@@ -20,8 +20,10 @@
                         >
                         </v-text-field>
                       </v-col>
+                      <v-col>
+                        <v-img v-bind:src="imageURL" />
+                      </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-img :src="{ photoURL }" />
                         <input
                           type="file"
                           style="display: none"
@@ -54,7 +56,7 @@
           <v-card class="mx-auto" max-width="344">
             <v-img
               class="avatar"
-              :src="photoURL"
+              :src="user.photoURL"
               height="200px"
               alt="Avatar"
             ></v-img>
@@ -86,57 +88,46 @@ export default {
       displayName: "",
       dialog: false,
       photoURL: "",
-      imageURL: null,
-      teste: null,
+      imageURL: "",
+      imageToSave: "",
     };
-  },
-  created() {
-   this.photoURL = this.donwloadProfilePhoto();
   },
   methods: {
     async updateUserData() {
       storage
         .ref(`users/${auth.currentUser.uid}/profile.jpg`)
         .put(this.photoURL)
-        .then((res) => {
-          auth.currentUser
-            .updateProfile({
-              displayName: this.displayName,
-              photoURL: res.fullpath,
+        .then(() => {
+          storage
+            .ref(`users/${auth.currentUser.uid}/profile.jpg`)
+            .getDownloadURL()
+            .then((imgUrl) => {
+              auth.currentUser
+                .updateProfile({
+                  displayName: this.displayName,
+                  photoURL: imgUrl,
+                })
+                .then(() => {
+                  this.dialog = false;
+                });
             })
-            .then((res) => {
-              console.log(res);
-              this.dialog = false;
-            })
-            .catch((err) => console.error(err));
+            .catch((error) => console.error(error));
         })
-        .catch((err) => console.error(err));
+        .catch((error) => console.error(error));
     },
     handleFileUpload(event) {
-      const files = event.target.files;
-      const fileReader = new FileReader();
-      fileReader.addEventListener("load", () => {
-        this.imageUrl = fileReader.result;
+      this.photoURL = event.target.files[0];
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        this.imageURL = reader.result;
       });
-      fileReader.readAsDataURL(files[0]);
-      this.photoURL = files[0];
-      console.log(this.photoURL);
+      reader.readAsDataURL(event.target.files[0]);
     },
 
     async submitFile() {
       this.$refs.file.click();
     },
-    async donwloadProfilePhoto() {
-      if (auth.currentUser) {
-        storage
-          .ref(`users/${auth.currentUser.uid}/profile.jpg`)
-          .getDownloadURL()
-          .then((imgUrl) => {
-            this.photoURL = imgUrl;
-            console.log(imgUrl);
-          });
-      }
-    },
+    async donwloadProfilePhoto() {},
   },
   props: ["user"],
 };
