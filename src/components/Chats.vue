@@ -4,7 +4,7 @@
       <div v-if="user">
         <v-row no-gutters>
           <v-col md="3"><ChatList :uid="user.uid" /> </v-col>
-          <v-col cols="12" sm="6" md="8"><ChatRoom :user="user" /> </v-col>
+          <v-col cols="8" sm="6" md="8"><ChatRoom :user="user" /> </v-col>
         </v-row>
       </div>
     </template>
