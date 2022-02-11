@@ -5,13 +5,13 @@
 
     <audio v-if="message.audioURL"  :src="message.audioURL" controls></audio><br />
 
-    <span class="sender">from UID {{ message.sender }}</span>
+    <span class="sender">From {{ message.senderName }}</span>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["message", "owner"],
+  props: ["message", "owner", "user"],
 };
 </script>
 

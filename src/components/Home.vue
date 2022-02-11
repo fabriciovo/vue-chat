@@ -4,18 +4,18 @@
       <template v-slot:user="{ user }">
         <div v-if="user">
           <div class="section">
-            <h2 style="margin-left: 13%">Chats</h2>
+            <h2>Chats</h2>
             <v-navigation-drawer absolute permanent>
               <template v-slot:prepend>
                 <v-list-item two-line>
                   <v-list-item-avatar>
-                    <img
-                      src="https://randomuser.me/api/portraits/women/81.jpg"
+                    <v-img
+                      :src="user.photoURL"
                     />
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title>Jane Smith</v-list-item-title>
+                    <v-list-item-title>{{user.displayName}}</v-list-item-title>
                     <v-list-item-subtitle>Logged In</v-list-item-subtitle>
                     <v-list-item-subtitle></v-list-item-subtitle>
                   </v-list-item-content>
@@ -71,7 +71,7 @@
                 </v-list-item>
               </v-list>
             </v-navigation-drawer>
-            <v-container style="margin-left: 13%">
+            <v-container>
               <router-view></router-view>
             </v-container>
           </div>
@@ -99,7 +99,5 @@ export default {
 </script>
 
 <style>
-.container {
-  margin-left: 13%;
-}
+
 </style>

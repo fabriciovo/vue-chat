@@ -15,6 +15,7 @@
                   <ChatMessage
                     :message="message"
                     :owner="user.uid === message.sender"
+                    :user="user"
                   />
                 </li>
               </ul>
@@ -28,7 +29,7 @@
               :disabled="(!newMessageText && !newAudio) || loading"
               class="button is-success"
               type="text"
-              @click="addMessage(user.uid)"
+              @click="addMessage(user)"
             >
               Send
             </button>
@@ -84,7 +85,7 @@ export default {
     };
   },
   methods: {
-    async addMessage(uid) {
+    async addMessage(user) {
       this.loading = true;
 
       let audioURL = null;
@@ -104,7 +105,8 @@ export default {
 
       await this.messagesCollection.doc(messageId).set({
         text: this.newMessageText,
-        sender: uid,
+        sender: user.uid,
+        senderName: user.displayName,
         createdAt: Date.now(),
         audioURL,
       });
@@ -133,7 +135,6 @@ export default {
 
       this.recorder.addEventListener("stop", () => {
         this.newAudio = new Blob(recordedChunks);
-        console.log(this.newAudio);
       });
 
       this.recorder.start();
