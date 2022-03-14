@@ -1,34 +1,98 @@
 <template>
-  <aside class="section">
-    <h3>Sign in Anonymously</h3>
-    <button class="button" @click="auth.signInAnonymously()">Sign In</button>
-
-    <div v-if="newUser">
-      <h3>Sign Up for a New Account</h3>
-      <a href="#" @click="newUser = false">Already Have an Account</a>
-    </div>
-
-    <div v-else>
-      <h3>Sign In with Email</h3>
-      <a href="#" @click="newUser = true"> Create Account</a>
-    </div>
-
-    <label for="email">Email</label><br />
-    <input v-model="email" placeholder="email" type="email" class="input" />
-    <label for="password">Password</label><br />
-    <input v-model="password" type="password" class="input" />
-    <br />
-
-    <button
-      class="button is-info"
-      :class="{ 'is-loading': loading }"
-      @click="signInOrCreateUser()"
-    >
-      {{ newUser ? "Sign Up" : "Login" }}
-    </button>
-
-    <p class="has-text-danger" v-if="errorMessage">{{ errorMessage }}</p>
-  </aside>
+  <v-app
+    id="inspire"
+    v-bind:style="{
+      backgroundImage: 'url(./login-background.png)',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+    }"
+  >
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md4>
+            <v-card class="elevation-12">
+              <v-toolbar dark>
+                <v-toolbar-title
+                  >Vue Chat -
+                  {{ newUser ? "Sign Up" : "Login" }}</v-toolbar-title
+                >
+              </v-toolbar>
+              <div v-if="!newUser">
+                <v-card-text>
+                  <v-form>
+                    <v-text-field
+                      name="email"
+                      label="Email"
+                      type="text"
+                      v-model="email"
+                    ></v-text-field>
+                    <v-text-field
+                      id="password"
+                      name="password"
+                      label="Password"
+                      type="password"
+                      v-model="password"
+                    ></v-text-field>
+                  </v-form>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn to="/" color="grey" plain @click="newUser = true"
+                    >Sign Up</v-btn
+                  >
+                  <v-btn dark to="/" @click="signInOrCreateUser()">Login</v-btn>
+                </v-card-actions>
+              </div>
+              <div v-else>
+                <v-card-text>
+                  <v-form>
+                    <v-text-field
+                      name="username"
+                      label="Username"
+                      type="text"
+                      v-model="username"
+                    ></v-text-field>
+                    <v-text-field
+                      name="email"
+                      label="Email"
+                      type="text"
+                      v-model="email"
+                    ></v-text-field>
+                    <v-text-field
+                      id="password"
+                      name="password"
+                      label="Password"
+                      type="password"
+                      v-model="password"
+                    ></v-text-field>
+                    <v-text-field
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      label="Confirm Password"
+                      type="password"
+                      v-model="confirmPassword"
+                    ></v-text-field>
+                  </v-form>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn to="/" color="grey" plain @click="newUser = false"
+                    >Back</v-btn
+                  >
+                  <v-btn dark to="/" @click="signInOrCreateUser()">Create Account</v-btn>
+                </v-card-actions>
+              </div>
+              <p class="has-text-danger" v-if="errorMessage">
+                {{ errorMessage }}
+              </p>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
@@ -54,7 +118,7 @@ export default {
             auth.currentUser
               .updateProfile({
                 displayName: "Username",
-                photoURL: "https://www.w3schools.com/howto/img_avatar.png"
+                photoURL: "https://www.w3schools.com/howto/img_avatar.png",
               })
               .catch((error) => console.error(error));
           });
