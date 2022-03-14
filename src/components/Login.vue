@@ -8,7 +8,7 @@
       backgroundSize: 'cover',
     }"
   >
-    <v-content>
+    <v-main>
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
@@ -42,7 +42,7 @@
                   <v-btn to="/" color="grey" plain @click="newUser = true"
                     >Sign Up</v-btn
                   >
-                  <v-btn dark to="/" @click="signInOrCreateUser()">Login</v-btn>
+                  <v-btn dark to="/" @click="singIn()">Login</v-btn>
                 </v-card-actions>
               </div>
               <div v-else>
@@ -81,17 +81,20 @@
                   <v-btn to="/" color="grey" plain @click="newUser = false"
                     >Back</v-btn
                   >
-                  <v-btn dark to="/" @click="signInOrCreateUser()">Create Account</v-btn>
+                  <v-btn dark to="/" @click="singUp()">Create Account</v-btn>
                 </v-card-actions>
               </div>
-              <p class="has-text-danger" v-if="errorMessage">
-                {{ errorMessage }}
-              </p>
             </v-card>
+            <v-snackbar
+              v-model="showErrorMessage"
+              :timeout="timeoutErrorMessage"
+            >
+              <p class="has-text-danger">{{ errorMessage }}</p>
+            </v-snackbar>
           </v-flex>
         </v-layout>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -100,37 +103,70 @@ import { auth } from "../firebase";
 export default {
   data() {
     return {
-      newUser: false,
       email: "",
       password: "",
-      loading: false,
+      confirmPassword: "",
+      username: "",
       errorMessage: "",
+      newUser: false,
+      loading: false,
+      showErrorMessage: false,
+      timeoutErrorMessage: 2000,
     };
   },
   methods: {
-    async signInOrCreateUser() {
+    async singUp() {
       this.loading = true;
-      this.errorMessage = "";
-      if (this.newUser) {
-        auth
-          .createUserWithEmailAndPassword(this.email, this.password)
-          .then(() => {
-            auth.currentUser
-              .updateProfile({
-                displayName: "Username",
-                photoURL: "https://www.w3schools.com/howto/img_avatar.png",
-              })
-              .catch((error) => console.error(error));
-          });
-      } else {
-        auth
-          .signInWithEmailAndPassword(this.email, this.password)
-          .then(() => {})
-          .catch((err) => console.error(err));
-        console.log("user");
-      }
+      // eslint-disable-next-line no-debugger
+      debugger;
+      auth
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .then(() => {
+          auth.currentUser
+            .updateProfile({
+              displayName: this.username,
+              photoURL: "https://www.w3schools.com/howto/img_avatar.png",
+            })
+            .catch((error) => {
+              this.showErrorMessage = true;
+              this.errorMessage = error.message;
+            });
+          console.log(this.username);
+        })
+        .catch((error) => {
+          this.showErrorMessage = true;
+          this.errorMessage = error.message;
+        })
+        .finally(() => (this.loading = false));
+    },
 
-      this.loading = false;
+    async singIn() {
+      this.loading = true;
+      // eslint-disable-next-line no-debugger
+      debugger;
+
+      if (
+        this.email === "" ||
+        this.password === "" ||
+        this.confirmPassword === "" ||
+        this.username === ""
+      ) {
+        this.errorMessage = "All fields must be filled";
+        this.loading = false;
+        return;
+      }
+      if (this.password !== this.confirmPassword) {
+        this.errorMessage = "password not matched";
+        this.loading = false;
+        return;
+      }
+      auth
+        .signInWithEmailAndPassword(this.email, this.password)
+        .catch((error) => {
+          this.showErrorMessage = true;
+          this.errorMessage = error.message;
+        })
+        .finally(() => (this.loading = false));
     },
   },
 };
