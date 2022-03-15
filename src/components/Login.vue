@@ -74,6 +74,7 @@
                       type="password"
                       v-model="confirmPassword"
                     ></v-text-field>
+                    <UploadImage />
                   </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -100,7 +101,9 @@
 
 <script>
 import { auth } from "../firebase";
+import UploadImage from "./UploadImage.vue";
 export default {
+  components: { UploadImage },
   data() {
     return {
       email: "",
@@ -119,32 +122,6 @@ export default {
       this.loading = true;
       // eslint-disable-next-line no-debugger
       debugger;
-      auth
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          auth.currentUser
-            .updateProfile({
-              displayName: this.username,
-              photoURL: "https://www.w3schools.com/howto/img_avatar.png",
-            })
-            .catch((error) => {
-              this.showErrorMessage = true;
-              this.errorMessage = error.message;
-            });
-          console.log(this.username);
-        })
-        .catch((error) => {
-          this.showErrorMessage = true;
-          this.errorMessage = error.message;
-        })
-        .finally(() => (this.loading = false));
-    },
-
-    async singIn() {
-      this.loading = true;
-      // eslint-disable-next-line no-debugger
-      debugger;
-
       if (
         this.email === "" ||
         this.password === "" ||
@@ -160,6 +137,28 @@ export default {
         this.loading = false;
         return;
       }
+      auth
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .then(() => {
+          auth.currentUser
+            .updateProfile({
+              displayName: this.username,
+              photoURL: "https://www.w3schools.com/howto/img_avatar.png",
+            })
+            .catch((error) => {
+              this.showErrorMessage = true;
+              this.errorMessage = error.message;
+            });
+        })
+        .catch((error) => {
+          this.showErrorMessage = true;
+          this.errorMessage = error.message;
+        })
+        .finally(() => (this.loading = false));
+    },
+
+    async singIn() {
+      this.loading = true;
       auth
         .signInWithEmailAndPassword(this.email, this.password)
         .catch((error) => {

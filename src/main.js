@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import { firestorePlugin } from 'vuefire'
 import VueCompositionApi from "@vue/composition-api"
 
-
 Vue.use(VueCompositionApi)
 Vue.use(VueRouter)
 Vue.use(firestorePlugin)
